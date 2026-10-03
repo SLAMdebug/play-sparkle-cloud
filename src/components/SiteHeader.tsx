@@ -45,13 +45,13 @@ export function SiteHeader() {
         </div>
       </div>
       <nav className="mx-auto flex max-w-7xl gap-2 overflow-x-auto px-4 pb-3">
-        <Link to="/" activeOptions={{ exact: true }} activeProps={{ className: "bg-primary text-primary-foreground" }}
+        <Link to="/" activeOptions={{ exact: true }} activeProps={{ className: "!bg-primary !text-primary-foreground" }}
           className="flex shrink-0 items-center gap-1 rounded-full bg-surface px-3 py-1.5 text-xs font-semibold ring-1 ring-border">
           <Gamepad2 className="h-3.5 w-3.5" /> Alla
         </Link>
         {categories.map((c) => (
           <Link key={c.slug} to="/category/$slug" params={{ slug: c.slug }}
-            activeProps={{ className: "bg-primary text-primary-foreground" }}
+            activeProps={{ className: "!bg-primary !text-primary-foreground" }}
             className="shrink-0 rounded-full bg-surface px-3 py-1.5 text-xs font-semibold ring-1 ring-border hover:ring-primary">
             {c.name}
           </Link>
