@@ -55,7 +55,7 @@ function GamePage() {
   };
 
   const toggleFav = async () => {
-    if (!user) return toast("Logga in för att spara favoriter");
+    if (!user) { toast("Logga in för att spara favoriter"); return; }
     if (fav) await supabase.from("favorites").delete().eq("user_id", user.id).eq("game_id", game.id);
     else await supabase.from("favorites").insert({ user_id: user.id, game_id: game.id });
     setFav(!fav);

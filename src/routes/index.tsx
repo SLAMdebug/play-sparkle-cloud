@@ -16,7 +16,7 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
-  const featured = games[0];
+  const featured = games[0]!;
   return (
     <div className="mx-auto max-w-7xl space-y-10 px-4 py-6">
       <section className="relative overflow-hidden rounded-2xl ring-1 ring-border">

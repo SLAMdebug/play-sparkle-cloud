@@ -3,7 +3,7 @@ import { searchGames } from "@/lib/games";
 import { GameGrid } from "@/components/GameCard";
 
 export const Route = createFileRoute("/search")({
-  validateSearch: (s: Record<string, unknown>) => ({ q: typeof s.q === "string" ? s.q : "" }),
+  validateSearch: (s: Record<string, unknown>) => ({ q: typeof s['q'] === "string" ? s['q'] : "" }),
   head: () => ({
     meta: [
       { title: "Sök spel – StellarCloud" },
