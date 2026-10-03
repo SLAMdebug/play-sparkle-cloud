@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ChangeEvent } from "react";
 import { toast } from "sonner";
 import { Camera, LogOut } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
@@ -60,7 +60,7 @@ function ProfilePage() {
     if (error) toast.error("Kunde inte spara"); else { toast.success("Sparat!"); refreshProfile(); }
   };
 
-  const onFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onFile = async (e: ChangeEvent<HTMLInputElement>) => {
     const f = e.target.files?.[0];
     if (f) save({ avatar_url: await resizeImage(f) });
   };
