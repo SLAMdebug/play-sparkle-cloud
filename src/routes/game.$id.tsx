@@ -4,6 +4,7 @@ import { Maximize, Heart, Play } from "lucide-react";
 import { toast } from "sonner";
 import { getGame, games, slugify } from "@/lib/games";
 import { GameCard } from "@/components/GameCard";
+import { AdSlot } from "@/components/AdSlot";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -65,21 +66,33 @@ function GamePage() {
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-6">
-      <div ref={frameRef} className="relative aspect-video w-full overflow-hidden rounded-2xl bg-card ring-1 ring-border">
+      <div className="grid gap-4 lg:grid-cols-[1fr_180px]">
+      <div ref={frameRef} className="animate-fade-up relative aspect-video w-full overflow-hidden rounded-2xl bg-card ring-1 ring-border">
         {running ? (
-          <iframe src={game.url} title={game.title} className="h-full w-full" allow="autoplay; fullscreen; gamepad; gyroscope; accelerometer" allowFullScreen />
+          <iframe
+            src={game.url}
+            title={game.title}
+            className="h-full w-full"
+            sandbox="allow-scripts allow-same-origin allow-pointer-lock allow-forms allow-orientation-lock"
+            allow="autoplay; fullscreen; gamepad; gyroscope; accelerometer"
+            allowFullScreen
+          />
         ) : (
           <>
             <img src={game.banner} alt={game.title} className="h-full w-full object-cover blur-sm brightness-50" />
             <div className="absolute inset-0 flex flex-col items-center justify-center gap-4">
-              <img src={game.thumb} alt="" className="w-40 rounded-xl ring-2 ring-primary shadow-glow md:w-56" />
-              <button onClick={start} className="inline-flex items-center gap-2 rounded-full bg-gradient-primary px-8 py-3 text-lg font-bold text-primary-foreground shadow-glow transition hover:scale-105">
+              <img src={game.thumb} alt="" className="animate-float w-40 rounded-xl ring-2 ring-primary shadow-glow md:w-56" />
+              <button onClick={start} className="animate-pulse-glow inline-flex items-center gap-2 rounded-full bg-gradient-primary px-8 py-3 text-lg font-bold text-primary-foreground transition hover:scale-110">
                 <Play className="h-5 w-5 fill-current" /> Spela
               </button>
+              <AdSlot className="w-64 min-h-[60px]" label="Före spelet" />
             </div>
           </>
         )}
       </div>
+      <AdSlot className="hidden lg:flex min-h-[400px]" label="Sidobanner 160×600" />
+      </div>
+      <AdSlot className="mt-4" label="Under spelet" />
 
       <div className="mt-4 flex flex-wrap items-center gap-3">
         <h1 className="text-2xl font-bold md:text-3xl">{game.title}</h1>
