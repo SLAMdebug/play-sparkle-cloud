@@ -15,6 +15,7 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { AuthProvider } from "@/hooks/useAuth";
 import { SiteHeader } from "@/components/SiteHeader";
 import { Toaster } from "@/components/ui/sonner";
+import { AdSlot } from "@/components/AdSlot";
 
 function NotFoundComponent() {
   return (
@@ -121,9 +122,11 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <SiteHeader />
+        <div className="mx-auto max-w-7xl px-4 pt-4"><AdSlot label="Topbanner 728×90" /></div>
         <main className="min-h-screen">
           <Outlet />
         </main>
+        <div className="mx-auto max-w-7xl px-4 pb-6"><AdSlot label="Sidfot-banner" /></div>
         <footer className="border-t py-6 text-center text-xs text-muted-foreground">
           StellarCloud · Spel tillhandahålls av GameDistribution
         </footer>
