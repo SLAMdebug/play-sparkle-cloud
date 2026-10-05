@@ -17,7 +17,13 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
-  const featured = games[0]!;
+  const featured = games.find((game) => game.id === "bowmasters") ?? games[0];
+  if (!featured) return null;
+  const promotedIds = ["bowmasters", "block-runner-subway-escape", "turbo-horizon-racing", "basketball-stars-2026"];
+  const popularGames = [
+    ...promotedIds.map((id) => games.find((game) => game.id === id)).filter((game): game is (typeof games)[number] => Boolean(game)),
+    ...games,
+  ].filter((game, index, list) => list.findIndex((item) => item.id === game.id) === index).slice(0, 24);
   return (
     <div className="mx-auto max-w-7xl space-y-10 px-4 py-6">
       <section className="animate-fade-up relative overflow-hidden rounded-2xl ring-1 ring-border">
@@ -34,22 +40,9 @@ function Index() {
         </div>
       </section>
 
-      <section className="animate-fade-up">
-        <h2 className="mb-4 text-xl font-bold">Alla kategorier</h2>
-        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
-          {categories.map((c) => (
-            <Link key={c.slug} to="/category/$slug" params={{ slug: c.slug }}
-              className="group rounded-xl bg-surface px-3 py-2.5 text-center ring-1 ring-border transition hover:ring-primary hover:shadow-glow">
-              <p className="truncate text-sm font-bold group-hover:text-primary">{c.name}</p>
-              <p className="text-xs text-muted-foreground">{c.count} spel</p>
-            </Link>
-          ))}
-        </div>
-      </section>
-
       <section>
         <h2 className="mb-4 text-xl font-bold">Populära spel</h2>
-        <GameGrid games={games.slice(1, 25)} />
+        <GameGrid games={popularGames} />
       </section>
 
       <AdSlot label="Mellanbanner" />

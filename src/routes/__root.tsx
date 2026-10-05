@@ -16,6 +16,8 @@ import { AuthProvider } from "@/hooks/useAuth";
 import { SiteHeader } from "@/components/SiteHeader";
 import { Toaster } from "@/components/ui/sonner";
 import { AdSlot } from "@/components/AdSlot";
+import { AppSidebar } from "@/components/AppSidebar";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 
 function NotFoundComponent() {
   return (
@@ -121,21 +123,26 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <SiteHeader />
-        <div className="mx-auto max-w-7xl px-4 pt-4"><AdSlot label="Topbanner 728×90" /></div>
-        <main className="min-h-screen">
-          <Outlet />
-        </main>
-        <div className="mx-auto max-w-7xl px-4 pb-6"><AdSlot label="Sidfot-banner" /></div>
-        <footer className="mt-10 border-t py-8 text-center text-xs text-muted-foreground">
-          <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-center gap-4 px-4">
-            <span className="font-display font-bold text-foreground">Stellar<span className="text-primary">Cloud</span></span>
-            <Link to="/about" className="hover:text-foreground">Om oss</Link>
-            <Link to="/privacy" className="hover:text-foreground">Integritetspolicy</Link>
-            <Link to="/credits" className="hover:text-foreground">Credits</Link>
-          </div>
-          <p className="mt-3">Spel tillhandahålls av GameDistribution · Run By Atomic Team</p>
-        </footer>
+        <SidebarProvider>
+          <AppSidebar />
+          <SidebarInset className="min-w-0">
+            <SiteHeader />
+            <div className="mx-auto w-full max-w-7xl px-4 pt-4"><AdSlot label="Topbanner 728×90" /></div>
+            <main className="min-h-screen">
+              <Outlet />
+            </main>
+            <div className="mx-auto w-full max-w-7xl px-4 pb-6"><AdSlot label="Sidfot-banner" /></div>
+            <footer className="mt-10 border-t py-8 text-center text-xs text-muted-foreground">
+              <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-center gap-4 px-4">
+                <span className="font-display font-bold text-foreground">Stellar<span className="text-primary">Cloud</span></span>
+                <Link to="/about" className="hover:text-foreground">Om oss</Link>
+                <Link to="/privacy" className="hover:text-foreground">Integritetspolicy</Link>
+                <Link to="/credits" className="hover:text-foreground">Credits</Link>
+              </div>
+              <p className="mt-3">Spel tillhandahålls av GameDistribution · Run By Atomic Team</p>
+            </footer>
+          </SidebarInset>
+        </SidebarProvider>
         <Toaster />
       </AuthProvider>
     </QueryClientProvider>

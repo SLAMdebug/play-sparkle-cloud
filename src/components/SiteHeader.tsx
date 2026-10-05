@@ -1,9 +1,9 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { Search, Gamepad2 } from "lucide-react";
+import { Search } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
-import { categories } from "@/lib/games";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 
 export function SiteHeader() {
   const { user, profile } = useAuth();
@@ -12,8 +12,9 @@ export function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-40 border-b bg-background/85 backdrop-blur">
-      <div className="mx-auto flex max-w-7xl items-center gap-4 px-4 py-3">
-        <Link to="/" className="font-display text-xl font-bold tracking-tight">
+      <div className="mx-auto flex max-w-7xl items-center gap-2 px-4 py-3 sm:gap-4">
+        <SidebarTrigger className="h-9 w-9 shrink-0" aria-label="Öppna spelmeny" />
+        <Link to="/" className="hidden font-display text-xl font-bold sm:block">
           Stellar<span className="text-primary">Cloud</span>
         </Link>
         <form
@@ -44,19 +45,6 @@ export function SiteHeader() {
           )}
         </div>
       </div>
-      <nav className="mx-auto flex max-w-7xl gap-2 overflow-x-auto px-4 pb-3">
-        <Link to="/" activeOptions={{ exact: true }} activeProps={{ className: "!bg-primary !text-primary-foreground" }}
-          className="flex shrink-0 items-center gap-1 rounded-full bg-surface px-3 py-1.5 text-xs font-semibold ring-1 ring-border">
-          <Gamepad2 className="h-3.5 w-3.5" /> Alla
-        </Link>
-        {categories.map((c) => (
-          <Link key={c.slug} to="/category/$slug" params={{ slug: c.slug }}
-            activeProps={{ className: "!bg-primary !text-primary-foreground" }}
-            className="shrink-0 rounded-full bg-surface px-3 py-1.5 text-xs font-semibold ring-1 ring-border hover:ring-primary">
-            {c.name}
-          </Link>
-        ))}
-      </nav>
     </header>
   );
 }
