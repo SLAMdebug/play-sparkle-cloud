@@ -34,6 +34,19 @@ function Index() {
         </div>
       </section>
 
+      <section className="animate-fade-up">
+        <h2 className="mb-4 text-xl font-bold">Alla kategorier</h2>
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
+          {categories.map((c) => (
+            <Link key={c.slug} to="/category/$slug" params={{ slug: c.slug }}
+              className="group rounded-xl bg-surface px-3 py-2.5 text-center ring-1 ring-border transition hover:ring-primary hover:shadow-glow">
+              <p className="truncate text-sm font-bold group-hover:text-primary">{c.name}</p>
+              <p className="text-xs text-muted-foreground">{c.count} spel</p>
+            </Link>
+          ))}
+        </div>
+      </section>
+
       <section>
         <h2 className="mb-4 text-xl font-bold">Populära spel</h2>
         <GameGrid games={games.slice(1, 25)} />
