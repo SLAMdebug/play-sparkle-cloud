@@ -13,3 +13,4 @@
 
 - Game catalog is a static JSON snapshot from the GameDistribution public feed in `src/data/games.json`; regenerate from the feed rather than hand-editing, so thumbnails stay official.
 - User data (profiles, favorites, play_history) lives in Lovable Cloud with per-user RLS; avatars are stored as small resized data URLs on the profile because public storage buckets are blocked in this workspace.
+- Primary discovery navigation lives in the shared collapsible sidebar so categories and featured games stay accessible on every route without duplicating them in page content.
