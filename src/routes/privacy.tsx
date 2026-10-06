@@ -29,6 +29,8 @@ function Privacy() {
           <li><strong className="text-foreground">{t("Profile picture:", "Profilbild:")}</strong>{t("the image you upload to your profile.", "den bild du själv laddar upp på din profil.")}</li>
           <li><strong className="text-foreground">{t("Your game activity:", "Dina val i spel:")}</strong>{t("favorites and your play history.", "favoriter och vilka spel du har spelat, så att du kan fortsätta där du slutade.")}</li>
           <li><strong className="text-foreground">{t("Game data:", "Speldata:")}</strong>{t("games manage their own progress in your browser; we do not store their levels.", "spelens egna framsteg (levels osv.) sparas av spelen själva i din webbläsare, inte hos oss.")}</li>
+          <li><strong className="text-foreground">{t("Weekly trending: ", "Veckotopplistan: ")}</strong>{t("we count game visits and play starts using a pseudonymous visitor cookie that expires after 30 days. Activity records are retained for up to 60 days; only aggregate rankings are public.", "vi räknar spelbesök och spelstarter med en pseudonym besökscookie som löper ut efter 30 dagar. Aktivitet sparas i upp till 60 dagar; bara sammanställda topplistor är offentliga.")}</li>
+          <li><strong className="text-foreground">{t("Language: ", "Språk: ")}</strong>{t("we use country information supplied by our hosting service to suggest Swedish without storing your IP address. Your language choice is saved in your browser.", "vi använder landsinformation från vår värdtjänst för att föreslå svenska utan att spara din IP-adress. Ditt språkval sparas i webbläsaren.")}</li>
         </ul>
       </div>
       <div className="rounded-2xl bg-surface p-6 ring-1 ring-border space-y-4">

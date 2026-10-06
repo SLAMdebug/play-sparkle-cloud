@@ -1,9 +1,9 @@
 # Roadmap
 
-- [ ] Remove sidebar controller and Bowmasters; use relevant category icons.
-- [ ] English default with Swedish switch and IP-country suggestion.
-- [ ] Record visits and plays and rank trending from the previous complete week.
-- [ ] Verify translated views, controls and metadata.
+- [x] Remove sidebar controller and Bowmasters; use relevant category icons.
+- [x] English default with Swedish switch and IP-country suggestion (live country detection requires hosting metadata).
+- [x] Record visits and plays and rank trending from the previous complete week.
+- [x] Verify translated views, controls and metadata.
 - [ ] Add embed.games games and exact images — waiting for user's iframe codes and image links.
 
 - [x] Lägg till en öppningsbar sidomeny på alla sidor.
