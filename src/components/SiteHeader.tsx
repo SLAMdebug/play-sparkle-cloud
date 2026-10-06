@@ -1,3 +1,5 @@
+import { Button } from "@/components/ui/button";
+import { useLanguage, useCategoryLabel } from "@/components/LanguageProvider";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { Search } from "lucide-react";
@@ -6,6 +8,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 
 export function SiteHeader() {
+  const { t, language, setLanguage } = useLanguage();
   const { user, profile } = useAuth();
   const navigate = useNavigate();
   const [q, setQ] = useState("");
@@ -13,7 +16,7 @@ export function SiteHeader() {
   return (
     <header className="sticky top-0 z-40 border-b bg-background/85 backdrop-blur">
       <div className="mx-auto flex max-w-7xl items-center gap-2 px-4 py-3 sm:gap-4">
-        <SidebarTrigger className="h-9 w-9 shrink-0" aria-label="Öppna spelmeny" />
+        <SidebarTrigger className="h-9 w-9 shrink-0" aria-label={t("Open game menu", "Öppna spelmeny")} />
         <Link to="/" className="hidden font-display text-xl font-bold sm:block">
           Stellar<span className="text-primary">Cloud</span>
         </Link>
@@ -25,11 +28,12 @@ export function SiteHeader() {
           <input
             value={q}
             onChange={(e) => setQ(e.target.value)}
-            placeholder="Sök bland spel..."
+            placeholder={t("Search games...", "Sök bland spel...")}
             className="w-full rounded-full border bg-surface py-2 pl-9 pr-4 text-sm outline-none focus:ring-2 focus:ring-ring"
           />
         </form>
-        <div className="ml-auto">
+        <Button variant="ghost" size="sm" aria-label={t("Switch to Swedish", "Byt till engelska")} onClick={() => setLanguage(language === "en" ? "sv" : "en")}>{language === "en" ? "SV" : "EN"}</Button>
+        <div className="ml-auto shrink-0">
           {user ? (
             <Link to="/profile" className="flex items-center gap-2 rounded-full bg-surface py-1 pl-1 pr-3 ring-1 ring-border hover:ring-primary">
               <Avatar className="h-8 w-8">
@@ -39,9 +43,7 @@ export function SiteHeader() {
               <span className="hidden text-sm font-semibold sm:inline">{profile?.username}</span>
             </Link>
           ) : (
-            <Link to="/auth" className="rounded-full bg-gradient-primary px-4 py-2 text-sm font-bold text-primary-foreground shadow-glow">
-              Logga in
-            </Link>
+            <Link to="/auth" className="rounded-full bg-gradient-primary px-4 py-2 text-sm font-bold text-primary-foreground shadow-glow">{t("Sign in", "Logga in")}</Link>
           )}
         </div>
       </div>

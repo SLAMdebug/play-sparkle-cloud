@@ -12,7 +12,7 @@ export type Game = {
   mobile: boolean;
 };
 
-export const games = raw as Game[];
+export const games = (raw as Game[]).filter((game) => game.id !== "bowmasters" && game.title.toLowerCase() !== "bowmasters");
 
 export const slugify = (s: string) =>
   s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");

@@ -1,0 +1,8 @@
+CREATE TABLE public.game_activity (id uuid PRIMARY KEY DEFAULT gen_random_uuid(), game_id text NOT NULL CHECK (length(game_id) BETWEEN 1 AND 160), event_type text NOT NULL CHECK (event_type IN ('open','play')), visitor_hash text NOT NULL, created_at timestamptz NOT NULL DEFAULT now());
+GRANT ALL ON public.game_activity TO service_role;
+ALTER TABLE public.game_activity ENABLE ROW LEVEL SECURITY;
+CREATE INDEX game_activity_week_idx ON public.game_activity(created_at,game_id);
+CREATE INDEX game_activity_dedupe_idx ON public.game_activity(visitor_hash,game_id,event_type,created_at);
+CREATE OR REPLACE FUNCTION public.weekly_trending() RETURNS TABLE(game_id text, opens bigint, plays bigint, score bigint) LANGUAGE sql STABLE SECURITY DEFINER SET search_path = public AS $$ SELECT game_id, count(*) FILTER (WHERE event_type='open') AS opens, count(*) FILTER (WHERE event_type='play') AS plays, count(*) FILTER (WHERE event_type='open') + 2*count(*) FILTER (WHERE event_type='play') AS score FROM public.game_activity WHERE created_at >= date_trunc('week', now() AT TIME ZONE 'UTC') AT TIME ZONE 'UTC' - interval '1 week' AND created_at < date_trunc('week', now() AT TIME ZONE 'UTC') AT TIME ZONE 'UTC' GROUP BY game_id ORDER BY score DESC, plays DESC, game_id LIMIT 24 $$;
+REVOKE ALL ON FUNCTION public.weekly_trending() FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.weekly_trending() TO anon, authenticated, service_role;

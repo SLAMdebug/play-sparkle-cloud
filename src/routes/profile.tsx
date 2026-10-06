@@ -1,3 +1,5 @@
+import { Button } from "@/components/ui/button";
+import { useLanguage, useCategoryLabel } from "@/components/LanguageProvider";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState, type ChangeEvent } from "react";
 import { toast } from "sonner";
@@ -11,10 +13,12 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 export const Route = createFileRoute("/profile")({
   head: () => ({
     meta: [
-      { title: "Min profil – StellarCloud" },
-      { name: "description", content: "Din profil, favoriter och senast spelade spel." },
-      { property: "og:title", content: "Min profil – StellarCloud" },
-      { property: "og:description", content: "Din profil på StellarCloud." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { title: "My profile – StellarCloud" },
+      { name: "description", content: "Your profile, favorites and recently played games." },
+      { property: "og:title", content: "My profile – StellarCloud" },
+      { property: "og:description", content: "Your StellarCloud profile." },
       { name: "robots", content: "noindex" },
     ],
   }),
@@ -28,7 +32,9 @@ function resizeImage(file: File): Promise<string> {
       const c = document.createElement("canvas");
       c.width = c.height = 160;
       const s = Math.min(img.width, img.height);
-      c.getContext("2d")!.drawImage(img, (img.width - s) / 2, (img.height - s) / 2, s, s, 0, 0, 160, 160);
+      const context = c.getContext("2d");
+      if (!context) { reject(new Error("Image processing unavailable")); return; }
+      context.drawImage(img, (img.width - s) / 2, (img.height - s) / 2, s, s, 0, 0, 160, 160);
       resolve(c.toDataURL("image/jpeg", 0.85));
     };
     img.onerror = reject;
@@ -37,6 +43,8 @@ function resizeImage(file: File): Promise<string> {
 }
 
 function ProfilePage() {
+  const { t } = useLanguage();
+  const categoryLabel = useCategoryLabel();
   const { user, profile, loading, refreshProfile } = useAuth();
   const navigate = useNavigate();
   const [name, setName] = useState("");
@@ -57,7 +65,7 @@ function ProfilePage() {
 
   const save = async (patch: { username?: string; avatar_url?: string }) => {
     const { error } = await supabase.from("profiles").update({ ...patch, updated_at: new Date().toISOString() }).eq("id", user.id);
-    if (error) toast.error("Kunde inte spara"); else { toast.success("Sparat!"); refreshProfile(); }
+    if (error) toast.error(t("Could not save", "Kunde inte spara")); else { toast.success(t("Saved!", "Sparat!")); refreshProfile(); }
   };
 
   const onFile = async (e: ChangeEvent<HTMLInputElement>) => {
@@ -82,24 +90,23 @@ function ProfilePage() {
           <div className="flex gap-2">
             <input value={name} onChange={(e) => setName(e.target.value)} maxLength={20}
               className="rounded-lg border bg-surface px-3 py-2 font-display text-xl font-bold outline-none focus:ring-2 focus:ring-ring" />
-            <button onClick={() => name.trim().length >= 3 ? save({ username: name.trim() }) : toast.error("Minst 3 tecken")}
-              className="rounded-lg bg-gradient-primary px-4 font-bold text-primary-foreground">Spara</button>
+            <Button onClick={() => name.trim().length >= 3 ? save({ username: name.trim() }) : toast.error(t("At least 3 characters", "Minst 3 tecken"))}
+              className="rounded-lg bg-gradient-primary px-4 font-bold text-primary-foreground">{t("Save", "Spara")}</Button>
           </div>
-          <p className="text-sm text-muted-foreground">{favs.length} favoriter · {totalPlays} spelningar</p>
+          <p className="text-sm text-muted-foreground">{favs.length} {t("favorites", "favoriter")} · {totalPlays} {t("plays", "spelningar")}</p>
         </div>
-        <button onClick={() => supabase.auth.signOut().then(() => navigate({ to: "/" }))}
+        <Button onClick={() => supabase.auth.signOut().then(() => navigate({ to: "/" }))}
           className="inline-flex items-center gap-2 rounded-full bg-surface px-4 py-2 text-sm font-semibold ring-1 ring-border">
-          <LogOut className="h-4 w-4" /> Logga ut
-        </button>
+          <LogOut className="h-4 w-4" />{t("Sign out", "Logga ut")}</Button>
       </section>
 
       <section>
-        <h2 className="mb-4 text-xl font-bold">Senast spelade</h2>
-        {recent.length ? <GameGrid games={recent.map((r) => r.game)} /> : <p className="text-sm text-muted-foreground">Inga spel ännu. <Link to="/" className="text-primary">Hitta ett spel</Link></p>}
+        <h2 className="mb-4 text-xl font-bold">{t("Recently played", "Senast spelade")}</h2>
+        {recent.length ? <GameGrid games={recent.map((r) => r.game)} /> : <p className="text-sm text-muted-foreground">{t("No games yet.", "Inga spel ännu.")}<Link to="/" className="text-primary">{t("Find a game", "Hitta ett spel")}</Link></p>}
       </section>
       <section>
-        <h2 className="mb-4 text-xl font-bold">Favoriter</h2>
-        {favs.length ? <GameGrid games={favs} /> : <p className="text-sm text-muted-foreground">Tryck på hjärtat på ett spel för att spara det här.</p>}
+        <h2 className="mb-4 text-xl font-bold">{t("Favorites", "Favoriter")}</h2>
+        {favs.length ? <GameGrid games={favs} /> : <p className="text-sm text-muted-foreground">{t("Tap the heart on a game to save it here.", "Tryck på hjärtat på ett spel för att spara det här.")}</p>}
       </section>
     </div>
   );

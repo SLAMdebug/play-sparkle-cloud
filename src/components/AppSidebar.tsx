@@ -1,5 +1,7 @@
+import { categoryIcon } from "@/lib/category-icons";
+import { useLanguage, useCategoryLabel } from "@/components/LanguageProvider";
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Gamepad2, Grid2X2, Home, Sparkles } from "lucide-react";
+import { Home } from "lucide-react";
 import { categories, games } from "@/lib/games";
 import {
   Sidebar,
@@ -17,7 +19,6 @@ import {
 } from "@/components/ui/sidebar";
 
 const featuredIds = [
-  "bowmasters",
   "block-runner-subway-escape",
   "turbo-horizon-racing",
   "basketball-stars-2026",
@@ -30,6 +31,8 @@ const featuredGames = featuredIds
   .filter((game): game is (typeof games)[number] => Boolean(game));
 
 export function AppSidebar() {
+  const { t } = useLanguage();
+  const categoryLabel = useCategoryLabel();
   const currentPath = useRouterState({ select: (router) => router.location.pathname });
   const { setOpenMobile } = useSidebar();
   const closeMobile = () => setOpenMobile(false);
@@ -38,10 +41,7 @@ export function AppSidebar() {
     <Sidebar collapsible="icon" className="border-sidebar-border">
       <SidebarHeader className="border-b border-sidebar-border p-3">
         <Link to="/" onClick={closeMobile} className="flex h-9 items-center gap-3 overflow-hidden px-1">
-          <span className="flex size-8 shrink-0 items-center justify-center rounded-md bg-primary text-primary-foreground">
-            <Gamepad2 className="size-4" />
-          </span>
-          <span className="whitespace-nowrap font-display text-base font-bold">
+          <span className="whitespace-nowrap font-display text-base font-bold group-data-[collapsible=icon]:hidden">
             Stellar<span className="text-primary">Cloud</span>
           </span>
         </Link>
@@ -49,14 +49,14 @@ export function AppSidebar() {
 
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Upptäck</SidebarGroupLabel>
+          <SidebarGroupLabel>{t("Discover", "Upptäck")}</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               <SidebarMenuItem>
-                <SidebarMenuButton asChild isActive={currentPath === "/"} tooltip="Alla spel">
+                <SidebarMenuButton asChild isActive={currentPath === "/"} tooltip={t("All games", "Alla spel")}>
                   <Link to="/" onClick={closeMobile}>
                     <Home />
-                    <span>Alla spel</span>
+                    <span>{t("All games", "Alla spel")}</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
@@ -80,18 +80,18 @@ export function AppSidebar() {
         </SidebarGroup>
 
         <SidebarGroup>
-          <SidebarGroupLabel>Kategorier</SidebarGroupLabel>
+          <SidebarGroupLabel>{t("Categories", "Kategorier")}</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {categories.map((category, index) => {
+              {categories.map((category) => {
                 const path = `/category/${category.slug}`;
-                const Icon = index % 2 === 0 ? Grid2X2 : Sparkles;
+                const Icon = categoryIcon(category.name);
                 return (
                   <SidebarMenuItem key={category.slug}>
-                    <SidebarMenuButton asChild isActive={currentPath === path} tooltip={category.name}>
+                    <SidebarMenuButton asChild isActive={currentPath === path} tooltip={categoryLabel(category.name)}>
                       <Link to="/category/$slug" params={{ slug: category.slug }} onClick={closeMobile}>
                         <Icon />
-                        <span>{category.name}</span>
+                        <span>{categoryLabel(category.name)}</span>
                       </Link>
                     </SidebarMenuButton>
                     <SidebarMenuBadge>{category.count}</SidebarMenuBadge>
