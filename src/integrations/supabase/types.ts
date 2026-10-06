@@ -106,6 +106,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      record_game_activity: {
+        Args: { p_event: string; p_game_id: string; p_visitor_hash: string }
+        Returns: undefined
+      }
       weekly_trending: {
         Args: never
         Returns: {
