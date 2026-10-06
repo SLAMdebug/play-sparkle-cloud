@@ -1,6 +1,7 @@
+import { categoryIcon } from "@/lib/category-icons";
 import { useLanguage, useCategoryLabel } from "@/components/LanguageProvider";
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Gamepad2, Grid2X2, Home, Sparkles } from "lucide-react";
+import { Home } from "lucide-react";
 import { categories, games } from "@/lib/games";
 import {
   Sidebar,
@@ -18,7 +19,6 @@ import {
 } from "@/components/ui/sidebar";
 
 const featuredIds = [
-  "bowmasters",
   "block-runner-subway-escape",
   "turbo-horizon-racing",
   "basketball-stars-2026",
@@ -41,10 +41,7 @@ export function AppSidebar() {
     <Sidebar collapsible="icon" className="border-sidebar-border">
       <SidebarHeader className="border-b border-sidebar-border p-3">
         <Link to="/" onClick={closeMobile} className="flex h-9 items-center gap-3 overflow-hidden px-1">
-          <span className="flex size-8 shrink-0 items-center justify-center rounded-md bg-primary text-primary-foreground">
-            <Gamepad2 className="size-4" />
-          </span>
-          <span className="whitespace-nowrap font-display text-base font-bold">
+          <span className="whitespace-nowrap font-display text-base font-bold group-data-[collapsible=icon]:hidden">
             Stellar<span className="text-primary">Cloud</span>
           </span>
         </Link>
@@ -86,9 +83,9 @@ export function AppSidebar() {
           <SidebarGroupLabel>{t("Categories", "Kategorier")}</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {categories.map((category, index) => {
+              {categories.map((category) => {
                 const path = `/category/${category.slug}`;
-                const Icon = index % 2 === 0 ? Grid2X2 : Sparkles;
+                const Icon = categoryIcon(category.name);
                 return (
                   <SidebarMenuItem key={category.slug}>
                     <SidebarMenuButton asChild isActive={currentPath === path} tooltip={categoryLabel(category.name)}>

@@ -1,3 +1,4 @@
+import { recordGameActivity } from "@/lib/discovery.functions";
 import { Button } from "@/components/ui/button";
 import { useLanguage, useCategoryLabel } from "@/components/LanguageProvider";
 import { createFileRoute, notFound, Link } from "@tanstack/react-router";
@@ -24,6 +25,8 @@ export const Route = createFileRoute("/game/$id")({
     const t = `Play ${game.title} free – StellarCloud`;
     return {
       meta: [
+        { property: "og:type", content: "website" },
+        { name: "twitter:card", content: "summary_large_image" },
         { title: t },
         { name: "description", content: game.description.slice(0, 155) },
         { property: "og:title", content: t },
@@ -52,8 +55,11 @@ function GamePage() {
       .then(({ data }) => setFav(!!data));
   }, [user, game.id]);
 
+  useEffect(() => { void recordGameActivity({ data: { gameId: game.id, event: "open" } }).catch(() => {}); }, [game.id]);
+
   const start = async () => {
     setRunning(true);
+    void recordGameActivity({ data: { gameId: game.id, event: "play" } }).catch(() => {});
     if (!user) return;
     const { data } = await supabase.from("play_history").select("play_count").eq("user_id", user.id).eq("game_id", game.id).maybeSingle();
     await supabase.from("play_history").upsert({

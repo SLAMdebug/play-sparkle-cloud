@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import { useLanguage, useCategoryLabel } from "@/components/LanguageProvider";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
@@ -7,8 +8,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 
 export function SiteHeader() {
-  const { t } = useLanguage();
-  const categoryLabel = useCategoryLabel();
+  const { t, language, setLanguage } = useLanguage();
   const { user, profile } = useAuth();
   const navigate = useNavigate();
   const [q, setQ] = useState("");
@@ -32,7 +32,8 @@ export function SiteHeader() {
             className="w-full rounded-full border bg-surface py-2 pl-9 pr-4 text-sm outline-none focus:ring-2 focus:ring-ring"
           />
         </form>
-        <div className="ml-auto">
+        <Button variant="ghost" size="sm" aria-label={t("Switch to Swedish", "Byt till engelska")} onClick={() => setLanguage(language === "en" ? "sv" : "en")}>{language === "en" ? "SV" : "EN"}</Button>
+        <div className="ml-auto shrink-0">
           {user ? (
             <Link to="/profile" className="flex items-center gap-2 rounded-full bg-surface py-1 pl-1 pr-3 ring-1 ring-border hover:ring-primary">
               <Avatar className="h-8 w-8">
