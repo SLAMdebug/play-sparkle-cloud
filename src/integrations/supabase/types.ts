@@ -32,6 +32,30 @@ export type Database = {
         }
         Relationships: []
       }
+      game_activity: {
+        Row: {
+          created_at: string
+          event_type: string
+          game_id: string
+          id: string
+          visitor_hash: string
+        }
+        Insert: {
+          created_at?: string
+          event_type: string
+          game_id: string
+          id?: string
+          visitor_hash: string
+        }
+        Update: {
+          created_at?: string
+          event_type?: string
+          game_id?: string
+          id?: string
+          visitor_hash?: string
+        }
+        Relationships: []
+      }
       play_history: {
         Row: {
           game_id: string
@@ -82,7 +106,15 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      weekly_trending: {
+        Args: never
+        Returns: {
+          game_id: string
+          opens: number
+          plays: number
+          score: number
+        }[]
+      }
     }
     Enums: {
       [_ in never]: never
