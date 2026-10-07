@@ -43,17 +43,12 @@ function AuthPage() {
       const { error } = await supabase.auth.signUp({
         email, password, options: { emailRedirectTo: window.location.origin, data: { username } },
       });
-      if (error) toast.error(error.message); else toast.success(t("Check your email to confirm your account!", "Kolla din e-post för att bekräfta kontot!"));
+      if (error) toast.error(error.message); else toast.success(t("Account created!", "Kontot är skapat!"));
     } else {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) toast.error(t("Incorrect email or password", "Fel e-post eller lösenord"));
     }
     setBusy(false);
-  };
-
-  const google = async () => {
-    const r = await lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.origin });
-    if (r.error) toast.error(t("Could not sign in with Google", "Kunde inte logga in med Google"));
   };
 
   return (
@@ -68,7 +63,6 @@ function AuthPage() {
             {mode === "in" ? t("Sign in", "Logga in") : t("Create account", "Skapa konto")}
           </Button>
         </form>
-        <Button onClick={google} className="mt-3 w-full rounded-lg bg-surface py-2.5 text-sm font-semibold ring-1 ring-border hover:ring-primary">{t("Continue with Google", "Fortsätt med Google")}</Button>
         <Button onClick={() => setMode(mode === "in" ? "up" : "in")} className="mt-4 w-full text-sm text-primary">
           {mode === "in" ? t("No account? Create one", "Inget konto? Skapa ett") : t("Already registered? Sign in", "Har du konto? Logga in")}
         </Button>
