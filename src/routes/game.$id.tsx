@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { useLanguage, useCategoryLabel } from "@/components/LanguageProvider";
 import { createFileRoute, notFound, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { Maximize, Heart, Play } from "lucide-react";
+import { Maximize, Heart, Play, Lock } from "lucide-react";
 import { toast } from "sonner";
 import { getGame, games, slugify } from "@/lib/games";
 import { GameCard } from "@/components/GameCard";
@@ -80,13 +80,21 @@ function GamePage() {
     <div className="mx-auto max-w-7xl px-4 py-6">
       <div className="grid gap-4 lg:grid-cols-[1fr_180px]">
       <div ref={frameRef} className="animate-fade-up relative aspect-video w-full overflow-hidden rounded-2xl bg-card ring-1 ring-border">
-        {running ? (
+        {game.locked ? (
+          <>
+            <img src={game.banner} alt={game.title} className="h-full w-full object-cover blur-sm brightness-50" />
+            <div className="absolute inset-0 flex flex-col items-center justify-center gap-3">
+              <Lock className="h-14 w-14" />
+              <p className="text-2xl font-bold">{t("Coming soon", "Kommer snart")}</p>
+            </div>
+          </>
+        ) : running ? (
           <iframe
             src={game.url}
             title={game.title}
             className="h-full w-full"
-            sandbox="allow-scripts allow-same-origin allow-pointer-lock allow-forms allow-orientation-lock"
-            allow="autoplay; fullscreen; gamepad; gyroscope; accelerometer"
+            allow="autoplay; fullscreen; gamepad; gyroscope; accelerometer; clipboard-write; screen-wake-lock; encrypted-media; picture-in-picture"
+            referrerPolicy="strict-origin-when-cross-origin"
             allowFullScreen
           />
         ) : (

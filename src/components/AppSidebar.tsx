@@ -26,9 +26,8 @@ const featuredIds = [
   "stickman-warriors-superhero-fight",
 ];
 
-const featuredGames = featuredIds
-  .map((id) => games.find((game) => game.id === id))
-  .filter((game): game is (typeof games)[number] => Boolean(game));
+void featuredIds;
+const featuredGames = games.filter((g) => !g.locked);
 
 export function AppSidebar() {
   const { t } = useLanguage();
