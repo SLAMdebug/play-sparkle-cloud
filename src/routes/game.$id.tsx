@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { useLanguage, useCategoryLabel } from "@/components/LanguageProvider";
 import { createFileRoute, notFound, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { Maximize, Heart, Play, Lock } from "lucide-react";
+import { Maximize, Minimize, Heart, Play, Lock } from "lucide-react";
 import { toast } from "sonner";
 import { getGame, games, slugify } from "@/lib/games";
 import { GameCard } from "@/components/GameCard";
@@ -46,7 +46,49 @@ function GamePage() {
   const { user } = useAuth();
   const [running, setRunning] = useState(false);
   const [fav, setFav] = useState(false);
+  const [expanded, setExpanded] = useState(false);
   const frameRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setExpanded(false);
+  }, [game.id]);
+
+  useEffect(() => {
+    if (!expanded) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape" && !document.fullscreenElement) setExpanded(false);
+    };
+    let enteredNative = false;
+    const onFullscreenChange = () => {
+      if (document.fullscreenElement === frameRef.current) enteredNative = true;
+      else if (!document.fullscreenElement && enteredNative) setExpanded(false);
+    };
+    document.addEventListener("keydown", onKeyDown);
+    document.addEventListener("fullscreenchange", onFullscreenChange);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener("keydown", onKeyDown);
+      document.removeEventListener("fullscreenchange", onFullscreenChange);
+    };
+  }, [expanded]);
+
+  const toggleFullscreen = async () => {
+    if (expanded) {
+      if (document.fullscreenElement && document.exitFullscreen) {
+        await document.exitFullscreen().catch(() => {});
+      }
+      setExpanded(false);
+      return;
+    }
+    setExpanded(true);
+    // iPhone and embedded previews may reject native fullscreen; keep the viewport fallback.
+    const frame = frameRef.current;
+    if (frame?.requestFullscreen) {
+      await frame.requestFullscreen().catch(() => {});
+    }
+  };
 
   useEffect(() => {
     setRunning(false);
@@ -79,7 +121,9 @@ function GamePage() {
   return (
     <div className="mx-auto max-w-7xl px-4 py-6">
       <div className="grid gap-4 lg:grid-cols-[1fr_180px]">
-      <div ref={frameRef} className="animate-fade-up relative aspect-video w-full overflow-hidden rounded-2xl bg-card ring-1 ring-border">
+      <div ref={frameRef} className={expanded
+        ? "game-fullscreen fixed inset-0 z-50 h-dvh w-full overflow-hidden bg-card"
+        : "animate-fade-up relative aspect-video min-h-80 w-full overflow-hidden rounded-2xl bg-card ring-1 ring-border sm:min-h-0"}>
         {game.locked ? (
           <>
             <img src={game.banner} alt={game.title} className="h-full w-full object-cover blur-sm brightness-50" />
@@ -108,19 +152,27 @@ function GamePage() {
             </div>
           </>
         )}
+        {expanded && (
+          <Button variant="secondary" size="icon" onClick={toggleFullscreen}
+            aria-label={t("Exit fullscreen", "Avsluta helskärm")}
+            title={t("Exit fullscreen", "Avsluta helskärm")}
+            className="game-fullscreen-exit absolute z-10 size-11 rounded-md border border-border">
+            <Minimize />
+          </Button>
+        )}
       </div>
       <AdSlot className="hidden lg:flex min-h-[400px]" label={t("Side banner 160×600", "Sidobanner 160×600")} />
       </div>
       <AdSlot className="mt-4" label={t("Below the game", "Under spelet")} />
 
-      <div className="mt-4 flex flex-wrap items-center gap-3">
-        <h1 className="text-2xl font-bold md:text-3xl">{game.title}</h1>
-        <div className="ml-auto flex gap-2">
+      <div className="mt-4 grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 sm:flex sm:flex-wrap">
+        <h1 className="min-w-0 break-words text-2xl font-bold md:text-3xl">{game.title}</h1>
+        <div className="ml-auto flex shrink-0 gap-2">
           <Button onClick={toggleFav} className="inline-flex items-center gap-2 rounded-full bg-surface px-4 py-2 text-sm font-semibold ring-1 ring-border hover:ring-primary">
-            <Heart className={`h-4 w-4 ${fav ? "fill-primary text-primary" : ""}`} /> {fav ? t("Favorite", "Favorit") : t("Add to favorites", "Lägg till favorit")}
+            <Heart className={`h-4 w-4 ${fav ? "fill-primary text-primary" : ""}`} /> <span className="hidden sm:inline">{fav ? t("Favorite", "Favorit") : t("Add to favorites", "Lägg till favorit")}</span>
           </Button>
-          <Button onClick={() => frameRef.current?.requestFullscreen()} className="inline-flex items-center gap-2 rounded-full bg-surface px-4 py-2 text-sm font-semibold ring-1 ring-border hover:ring-primary">
-            <Maximize className="h-4 w-4" />{t("Fullscreen", "Helskärm")}</Button>
+          <Button onClick={toggleFullscreen} aria-label={t("Fullscreen", "Helskärm")} title={t("Fullscreen", "Helskärm")} className="inline-flex items-center gap-2 rounded-full bg-surface px-4 py-2 text-sm font-semibold ring-1 ring-border hover:ring-primary">
+            <Maximize className="h-4 w-4" /><span className="hidden sm:inline">{t("Fullscreen", "Helskärm")}</span></Button>
         </div>
       </div>
       <div className="mt-2 flex flex-wrap gap-2">
