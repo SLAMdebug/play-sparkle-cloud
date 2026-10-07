@@ -1,5 +1,7 @@
 # Roadmap
 
+- [x] Add phone fullscreen with a viewport fallback and an accessible exit control.
+
 - [x] Remove sidebar controller and Bowmasters; use relevant category icons.
 - [x] English default with Swedish switch and IP-country suggestion (live country detection requires hosting metadata).
 - [x] Record visits and plays and rank trending from the previous complete week.
