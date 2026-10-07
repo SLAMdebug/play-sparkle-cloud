@@ -1,6 +1,7 @@
 # Roadmap
 
 - [x] Add phone fullscreen with a viewport fallback and an accessible exit control.
+- [x] Request landscape orientation in supported phone browsers and release it on exit.
 
 - [x] Remove sidebar controller and Bowmasters; use relevant category icons.
 - [x] English default with Swedish switch and IP-country suggestion (live country detection requires hosting metadata).

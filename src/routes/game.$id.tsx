@@ -69,6 +69,7 @@ function GamePage() {
     document.addEventListener("fullscreenchange", onFullscreenChange);
     return () => {
       document.body.style.overflow = previousOverflow;
+      screen.orientation?.unlock?.();
       document.removeEventListener("keydown", onKeyDown);
       document.removeEventListener("fullscreenchange", onFullscreenChange);
     };
@@ -87,6 +88,14 @@ function GamePage() {
     const frame = frameRef.current;
     if (frame?.requestFullscreen) {
       await frame.requestFullscreen().catch(() => {});
+      if (document.fullscreenElement === frame && window.matchMedia("(pointer: coarse)").matches) {
+        const orientation = screen.orientation as ScreenOrientation & {
+          lock?: (orientation: "landscape") => Promise<void>;
+        };
+        // Mobile browsers that support orientation locking require native fullscreen first.
+        await orientation?.lock?.("landscape").catch(() => {});
+        if (document.fullscreenElement !== frame) orientation?.unlock?.();
+      }
     }
   };
 

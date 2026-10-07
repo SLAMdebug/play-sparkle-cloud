@@ -16,7 +16,7 @@
 - Primary discovery navigation lives in the shared collapsible sidebar so categories and featured games stay accessible on every route without duplicating them in page content.
 
 - UI localization uses the shared LanguageProvider with English SSR defaults and explicit persisted language choices to avoid hydration mismatches.
-- Game fullscreen uses native fullscreen when available and a fixed viewport fallback otherwise, preserving the iframe and providing an in-frame exit control for phones.
+- Game fullscreen preserves the iframe, uses native fullscreen with optional landscape locking on touch devices, and falls back to the viewport with an exit control; release orientation on exit.
 - Country suggestions use hosting-edge IP country metadata only; never store or forward raw visitor IP addresses.
 - Discovery excludes withdrawn games in the catalog adapter, keeping the official source snapshot unchanged.
 - Weekly trending ranks the previous complete UTC Monday–Sunday week (opens + twice play starts); activity writes are server-validated, pseudonymous and deduplicated, and only aggregate results are public.
