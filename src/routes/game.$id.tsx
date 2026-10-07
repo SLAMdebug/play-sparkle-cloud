@@ -168,7 +168,7 @@ function GamePage() {
       <div className="mt-4 grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 sm:flex sm:flex-wrap">
         <h1 className="min-w-0 break-words text-2xl font-bold md:text-3xl">{game.title}</h1>
         <div className="ml-auto flex shrink-0 gap-2">
-          <Button onClick={toggleFav} className="inline-flex items-center gap-2 rounded-full bg-surface px-4 py-2 text-sm font-semibold ring-1 ring-border hover:ring-primary">
+          <Button onClick={toggleFav} aria-label={fav ? t("Favorite", "Favorit") : t("Add to favorites", "Lägg till favorit")} className="inline-flex items-center gap-2 rounded-full bg-surface px-4 py-2 text-sm font-semibold ring-1 ring-border hover:ring-primary">
             <Heart className={`h-4 w-4 ${fav ? "fill-primary text-primary" : ""}`} /> <span className="hidden sm:inline">{fav ? t("Favorite", "Favorit") : t("Add to favorites", "Lägg till favorit")}</span>
           </Button>
           <Button onClick={toggleFullscreen} aria-label={t("Fullscreen", "Helskärm")} title={t("Fullscreen", "Helskärm")} className="inline-flex items-center gap-2 rounded-full bg-surface px-4 py-2 text-sm font-semibold ring-1 ring-border hover:ring-primary">
